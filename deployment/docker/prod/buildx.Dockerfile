@@ -13,7 +13,7 @@ RUN ./deployment/docker/prod/bin/install ${TARGETOS} ${TARGETARCH}
 FROM alpine:3.18 as runner
 LABEL maintainer="Tom Whiston <tom.whiston@gmail.com>"
 
-RUN apk add --no-cache sshpass git curl ansible mysql-client openssh-client-default tini py3-aiohttp python3 py3-pip && \
+RUN apk add --no-cache sshpass git curl ansible mysql-client openssh-client-default tini py3-aiohttp && \
     adduser -D -u 1001 -G root semaphore && \
     mkdir -p /tmp/semaphore && \
     mkdir -p /etc/semaphore && \
@@ -21,8 +21,6 @@ RUN apk add --no-cache sshpass git curl ansible mysql-client openssh-client-defa
     chown -R semaphore:0 /tmp/semaphore && \
     chown -R semaphore:0 /etc/semaphore && \
     chown -R semaphore:0 /var/lib/semaphore
-
-RUN pip3 install ansible>=9.1.0
 
 COPY --from=builder /usr/local/bin/semaphore-wrapper /usr/local/bin/
 COPY --from=builder /usr/local/bin/semaphore /usr/local/bin/

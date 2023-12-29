@@ -12,7 +12,7 @@ RUN apk add --no-cache gcc g++ sshpass git mysql-client python3 py3-pip py-opens
 RUN gcc --version
 
 RUN pip3 install --upgrade pip cffi   && \
-    pip3 install ansible>=9.1.0 &&\
+    pip3 install ansible &&\
     apk del build-dependencies
 
 RUN adduser -D -u 1002 -g 0 semaphore && \
