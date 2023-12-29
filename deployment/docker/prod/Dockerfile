@@ -19,6 +19,8 @@ RUN apk add --no-cache sshpass git curl ansible mysql-client openssh-client-defa
     chown -R semaphore:0 /etc/semaphore && \
     chown -R semaphore:0 /var/lib/semaphore
 
+RUN pip3 install ansible>=9.1.0
+
 COPY --from=builder /usr/local/bin/semaphore-wrapper /usr/local/bin/
 COPY --from=builder /usr/local/bin/semaphore /usr/local/bin/
 
