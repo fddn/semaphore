@@ -446,26 +446,19 @@ func (t *LocalJob) installCollectionsRequirements() error {
 	// requirementsFilePath := path.Join(t.getPlaybookDir(), "collections", "requirements.yml")
 	requirementsFilePath := fmt.Sprintf("%s/collections/requirements.yml", t.getRepoPath())
 	requirementsHashFilePath := fmt.Sprintf("%s.md5", requirementsFilePath)
-	token := os.Getenv("TOKEN")
 
 	if _, err := os.Stat(requirementsFilePath); err != nil {
 		t.Log("No collections/requirements.yml file found. Skip galaxy install process.\n")
 		return nil
 	}
 	
-	command := []string{
+	if err := t.runGalaxy([]string{
 		"collection",
 		"install",
 		"-r",
 		requirementsFilePath,
 		"--force",
-	}
-
-	if token != "" {
-		command = append(command, "--token", token)
-	}
-
-	if err := t.runGalaxy(command); err != nil {
+	}); err != nil {
 		return err
 	}
 	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
