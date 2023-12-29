@@ -403,22 +403,35 @@ func (t *LocalJob) installRolesRequirements() error {
 		return nil
 	}
 
-	if hasRequirementsChanges(requirementsFilePath, requirementsHashFilePath) {
-		if err := t.runGalaxy([]string{
-			"role",
-			"install",
-			"-r",
-			requirementsFilePath,
-			"--force",
-		}); err != nil {
-			return err
-		}
-		if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
-			return err
-		}
-	} else {
-		t.Log("roles/requirements.yml has no changes. Skip galaxy install process.\n")
+	if err := t.runGalaxy([]string{
+		"role",
+		"install",
+		"-r",
+		requirementsFilePath,
+		"--force",
+	}); err != nil {
+		return err
 	}
+	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
+		return err
+	}
+	
+	// if hasRequirementsChanges(requirementsFilePath, requirementsHashFilePath) {
+	// 	if err := t.runGalaxy([]string{
+	// 		"role",
+	// 		"install",
+	// 		"-r",
+	// 		requirementsFilePath,
+	// 		"--force",
+	// 	}); err != nil {
+	// 		return err
+	// 	}
+	// 	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
+	// 		return err
+	// 	}
+	// } else {
+	// 	t.Log("roles/requirements.yml has no changes. Skip galaxy install process.\n")
+	// }
 
 	return nil
 }
@@ -430,30 +443,44 @@ func (t *LocalJob) getPlaybookDir() string {
 }
 
 func (t *LocalJob) installCollectionsRequirements() error {
-	requirementsFilePath := path.Join(t.getPlaybookDir(), "collections", "requirements.yml")
+	// requirementsFilePath := path.Join(t.getPlaybookDir(), "collections", "requirements.yml")
+	requirementsFilePath := fmt.Sprintf("%s/collections/requirements.yml", t.getRepoPath())
 	requirementsHashFilePath := fmt.Sprintf("%s.md5", requirementsFilePath)
 
 	if _, err := os.Stat(requirementsFilePath); err != nil {
 		t.Log("No collections/requirements.yml file found. Skip galaxy install process.\n")
 		return nil
 	}
-
-	if hasRequirementsChanges(requirementsFilePath, requirementsHashFilePath) {
-		if err := t.runGalaxy([]string{
-			"collection",
-			"install",
-			"-r",
-			requirementsFilePath,
-			"--force",
-		}); err != nil {
-			return err
-		}
-		if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
-			return err
-		}
-	} else {
-		t.Log("collections/requirements.yml has no changes. Skip galaxy install process.\n")
+	
+	if err := t.runGalaxy([]string{
+		"collection",
+		"install",
+		"-r",
+		requirementsFilePath,
+		"--force",
+	}); err != nil {
+		return err
 	}
+	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
+		return err
+	}
+	
+	// if hasRequirementsChanges(requirementsFilePath, requirementsHashFilePath) {
+	// 	if err := t.runGalaxy([]string{
+	// 		"collection",
+	// 		"install",
+	// 		"-r",
+	// 		requirementsFilePath,
+	// 		"--force",
+	// 	}); err != nil {
+	// 		return err
+	// 	}
+	// 	if err := writeMD5Hash(requirementsFilePath, requirementsHashFilePath); err != nil {
+	// 		return err
+	// 	}
+	// } else {
+	// 	t.Log("collections/requirements.yml has no changes. Skip galaxy install process.\n")
+	// }
 
 	return nil
 }
