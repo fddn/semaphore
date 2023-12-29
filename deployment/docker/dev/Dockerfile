@@ -11,7 +11,7 @@ RUN apk add --no-cache gcc g++ sshpass git mysql-client python3 py3-pip py-opens
 
 RUN pip3 install --upgrade pip cffi &&\
     apk del build-dependencies   && \
-    pip3 install ansible
+    pip3 install ansible>=9.1.0
 
 RUN adduser -D -u 1002 -g 0 semaphore && \
     mkdir -p /go/src/github.com/ansible-semaphore/semaphore && \
